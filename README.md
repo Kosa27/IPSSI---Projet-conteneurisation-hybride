@@ -10,15 +10,15 @@ Ce projet a pour but de :
 
 ---
 
-- Partie 1 – Infrastructure de base (Docker)
+### Partie 1 – Infrastructure de base (Docker)
 
-### Livrables fournis
+# Livrables fournis
 - Dockerfile Apache (`docker/apache/Dockerfile` + `index.html`)
 - Dockerfile MariaDB (`docker/mariadb/Dockerfile`)
 - Dockerfile Reverse Proxy (`docker/reverse-proxy/Dockerfile` + `default.conf`)
 - Script d’automatisation `deploy_docker.sh`
 
-### Déploiement manuel (bash)
+# Déploiement manuel (bash)
 1. Créer un réseau :
    docker network create webnet
    
@@ -65,15 +65,15 @@ echo "Infrastructure Docker déployée sur http://localhost:${PORT}"
 
 
 
-- Partie 2 – Infrastructure cible (LXD)
+### Partie 2 – Infrastructure cible (LXD)
 
-### Livrables fournis
+# Livrables fournis
 - Procédure de mise en place d’Apache + MariaDB sous LXD
 - Script d’automatisation deploy_lxd.sh
 - Volume partagé hôte ↔ conteneur web
 - Règles iptables pour limiter l’accès aux bases de données
   
-### Déploiement manuel (bash)
+# Déploiement manuel (bash)
 
 1. Créer le réseau :
 lxc network create lxnet ipv4.address=10.50.50.1/24 ipv4.nat=true ipv6.address=none
