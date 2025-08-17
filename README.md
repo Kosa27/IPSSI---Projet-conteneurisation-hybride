@@ -10,15 +10,15 @@ Ce projet a pour but de :
 
 ---
 
-### Partie 1 – Infrastructure de base (Docker)
+# Partie 1 – Infrastructure de base (Docker)
 
-# Livrables fournis
+### Livrables fournis
 - Dockerfile Apache (`docker/apache/Dockerfile` + `index.html`)
 - Dockerfile MariaDB (`docker/mariadb/Dockerfile`)
 - Dockerfile Reverse Proxy (`docker/reverse-proxy/Dockerfile` + `default.conf`)
 - Script d’automatisation `deploy_docker.sh`
 
-# Déploiement manuel (bash)
+### Déploiement manuel (bash)
 1. Créer un réseau :
    docker network create webnet
    
@@ -33,20 +33,20 @@ docker run -d --name monsite-db --network webnet mymariadb
 4. Tester :
 curl http://localhost:8080
 
-Automatisation :
+### Automatisation :
 chmod +x deploy_docker.sh
 ./deploy_docker.sh monsite 8080
 
 
-### Partie 2 – Infrastructure cible (LXD)
+# Partie 2 – Infrastructure cible (LXD)
 
-# Livrables fournis
+### Livrables fournis
 - Procédure de mise en place d’Apache + MariaDB sous LXD
 - Script d’automatisation deploy_lxd.sh
 - Volume partagé hôte ↔ conteneur web
 - Règles iptables pour limiter l’accès aux bases de données
   
-# Déploiement manuel (bash)
+### Déploiement manuel (bash)
 
 1. Créer le réseau :
 lxc network create lxnet ipv4.address=10.50.50.1/24 ipv4.nat=true ipv6.address=none
@@ -59,14 +59,14 @@ lxc launch images:ubuntu/22.04 monsite-db -n lxnet
 lxc exec monsite-web -- apt update && apt install -y apache2
 lxc exec monsite-db -- apt update && apt install -y mariadb-server
 
-Automatisation :
+### Automatisation :
 chmod +x deploy_lxd.sh
 ./deploy_lxd.sh monsite 8081
 
-Volume partagé :
+### Volume partagé :
 lxc config device add monsite-web shared disk source=$(pwd)/shared path=/var/www/html
 
-Sécurité :
+### Sécurité :
 iptables -A INPUT -p tcp --dport 3306 -s <IP_WEB> -j ACCEPT
 iptables -A INPUT -p tcp --dport 3306 -j DROP
 
