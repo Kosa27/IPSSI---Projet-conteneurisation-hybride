@@ -37,6 +37,34 @@ Automatisation :
 chmod +x deploy_docker.sh
 ./deploy_docker.sh monsite 8080
 
+
+Script d'automatisation :
+
+PROJECT=$1
+PORT=$2
+
+if [ -z "$PROJECT" ] || [ -z "$PORT" ]; then
+    echo "Usage: $0 projet port_http"
+    exit 1
+fi
+
+# Créer un réseau dédié
+docker network create ${PROJECT}-net || true
+
+# Construire les images
+docker build -t ${PROJECT}-apache ./docker/apache
+docker build -t ${PROJECT}-mariadb ./docker/mariadb
+docker build -t ${PROJECT}-proxy ./docker/reverse-proxy
+
+# Lancer les conteneurs
+docker run -d --name ${PROJECT}-web --network ${PROJECT}-net -p ${PORT}:80 ${PROJECT}-apache
+docker run -d --name ${PROJECT}-db --network ${PROJECT}-net ${PROJECT}-mariadb
+docker run -d --name ${PROJECT}-proxy --network ${PROJECT}-net -p 80:80 ${PROJECT}-proxy
+
+echo "Infrastructure Docker déployée sur http://localhost:${PORT}"
+
+
+
 - Partie 2 – Infrastructure cible (LXD)
 
 ### Livrables fournis
