@@ -42,8 +42,9 @@ chmod +x deploy_docker.sh
 
 ### Livrables fournis
 - Procédure de mise en place d’Apache + MariaDB sous LXD
+- Procédure de migration des infrastructures
 - Script d’automatisation deploy_lxd.sh
-- Volume partagé hôte ↔ conteneur web
+- Volume partagé hôte et conteneur web
 - Règles iptables pour limiter l’accès aux bases de données
   
 ### Déploiement manuel (bash)
