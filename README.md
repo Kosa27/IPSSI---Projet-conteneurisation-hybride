@@ -3,7 +3,7 @@
 # Projet – Conteneurisation Hybride
 
 Ce projet a pour but de :
-- Reproduire l’infrastructure actuelle (Apache + MariaDB + Reverse Proxy) avec Docker sur Ubuntu 22.04.
+- Reproduire une infrastructure (Apache + MariaDB + Reverse Proxy) avec Docker sur Ubuntu 22.04.
 - Préparer la migration vers LXD pour Apache et MariaDB, tout en conservant le reverse proxy sous Docker.
 - Automatiser le déploiement avec des scripts.
 - Sécuriser l’accès aux bases de données via iptables.
@@ -18,7 +18,7 @@ Ce projet a pour but de :
 - Dockerfile Reverse Proxy (`docker/reverse-proxy/Dockerfile` + `default.conf`)
 - Script d’automatisation `deploy_docker.sh`
 
-### Déploiement manuel (bash)
+### Procédure de déploiement manuel (bash)
 1. Créer un réseau :
    docker network create webnet
    
@@ -33,7 +33,7 @@ docker run -d --name monsite-db --network webnet mymariadb
 4. Tester :
 curl http://localhost:8080
 
-### Automatisation :
+### Automatisation (lancer le script fourni) :
 chmod +x deploy_docker.sh
 ./deploy_docker.sh monsite 8080
 
@@ -55,11 +55,21 @@ lxc network create lxnet ipv4.address=10.50.50.1/24 ipv4.nat=true ipv6.address=n
 lxc launch images:ubuntu/22.04 monsite-web -n lxnet
 lxc launch images:ubuntu/22.04 monsite-db -n lxnet
 
-3. Installer Apache et MariaDB :
-lxc exec monsite-web -- apt update && apt install -y apache2
-lxc exec monsite-db -- apt update && apt install -y mariadb-server
+3. Installer Apache dans le web :
+lxc exec monsite-web -- bash -c "apt update && apt install -y apache2 && echo '<h1>LXD Web Server</h1>' > /var/www/html/index.html"
 
-### Automatisation :
+4. Installer MariaDB dans la DB :
+lxc exec monsite-db -- bash -c "apt update && apt install -y mariadb-server"
+
+
+### Procédure de migration
+- Dans l’infra Docker, Apache + MariaDB tournaient dans Docker.
+- Dans l’infra cible :
+Apache et MariaDB passent dans LXD
+Le reverse proxy reste sous Docker pour compatibilité.
+
+
+### Automatisation (lancer le script fourni):
 chmod +x deploy_lxd.sh
 ./deploy_lxd.sh monsite 8081
 
